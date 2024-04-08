@@ -11,14 +11,6 @@
 #include <unistd.h>
 #include <config.h>
 
-//status_code_t string_to_method(const char *method) {
-//    for (int i = 0; status_codes[i].message != NULL; i++) {
-//        if (atoi(method) == (int)status_codes[i].code)
-//            return i;
-//    }
-//    return INVALID_METHOD;
-//}
-
 method_t string_to_method(const char *method) {
     for (int i = 0; methods[i].string != NULL; i++) {
         if (strcmp(methods[i].string, method) == 0)

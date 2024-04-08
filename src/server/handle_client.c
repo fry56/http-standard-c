@@ -6,7 +6,7 @@
 */
 
 #include <stdio.h>
-#include "router.h"
+#include <router.h>
 #include <string.h>
 #include <regex.h>
 #include <config.h>
