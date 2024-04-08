@@ -38,8 +38,8 @@ static void parse_and_store_param_names(const char *template_path,
 static void end_of_string(route_params_t *route, char *dest,
     const char *regex_pattern)
 {
-    dest++;
     *dest = '$';
+    dest++;
     *dest = '\0';
     if (regcomp(&route->regex_pattern, regex_pattern, REG_EXTENDED) != 0)
         fprintf(stderr, "Failed to compile regex: %s\n", regex_pattern);
@@ -51,13 +51,13 @@ static void compile_regex_for_route(route_params_t *route)
     const char *src = route->template_path;
     char *dest = regex_pattern;
 
-    dest++;
     *dest = '^';
+    dest++;
     while (*src) {
         if (*src != ':') {
+            *dest = *src;
             dest++;
             src++;
-            *dest = *src;
             continue;
         }
         strcpy(dest, "([^/]+)");
