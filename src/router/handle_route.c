@@ -19,8 +19,7 @@ static bool execute_route_logic(route_params_t *route, request_t *request, respo
         route->handler(request, response);
         return true;
     }
-    response->status_code = NOT_IMPLEMENTED;
-    response->body = "Not implemented";
+    new_not_implemented(response, "Route not implemented");
     return false;
 }
 
@@ -34,13 +33,8 @@ response_t *handle_route(router_t *router, request_t *request)
     response->header_count = 0;
     response->body = "";
     response->body_length = 0;
-    if (route == NULL || route->method != request->method) {
-        response->status_code = NOT_FOUND;
-        response->body = "404 Not Found: The requested path '/testpath' does not exist on this server.";
-        add_header_response(response, "Content-Type: text/plain");
-        response->body_length = strlen(response->body + 1);
-        return response;
-    }
+    if (route == NULL || route->method != request->method)
+        return new_not_found(response, "Route not found");
     request->route = route;
     extract_params(request);
     execute_route_logic(route, request, response);

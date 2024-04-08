@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
 static const char *get_status_message(status_code_t status_code) {
     for (const status_code_info_t *info = status_codes;
@@ -67,11 +68,14 @@ void send_response(int client_fd, response_t *response)
     add_content_length_header(response);
     http_response = format_http_response(response);
     if (!http_response) {
-        dprintf(client_fd, "%s", "HTTP/1.1 500 Internal Server Error\r\n"
-            "Content-Type: text/plain\r\n\r\nInternal Server Error");
+        if (response->status_code != INTERNAL_SERVER_ERROR) {
+            new_internal_server_error(response, "Failed to format HTTP response");
+            send_response(client_fd, response);
+        }
         return;
     }
     printf("%s", http_response);
     dprintf(client_fd, "%s", http_response);
     free(http_response);
+    close(client_fd);
 }

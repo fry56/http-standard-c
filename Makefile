@@ -27,6 +27,17 @@ SRC = \
 	\
 	src/response/send_response.c \
 	src/response/add_header_response.c \
+	src/response/type/bad_request.c \
+	src/response/type/not_found.c \
+	src/response/type/ok.c \
+	src/response/type/created.c \
+	src/response/type/forbidden.c \
+	src/response/type/internal_server_error.c \
+	src/response/type/unauthorized.c \
+	src/response/type/no_content.c \
+	src/response/type/service_unavailable.c \
+	src/response/type/conflict.c \
+	src/response/type/not_implemented.c \
 	\
 	src/request/parse_request.c \
 	src/request/find_param.c \
