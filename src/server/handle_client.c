@@ -11,26 +11,32 @@
 #include <regex.h>
 #include <config.h>
 
-void convert_path_to_regex(const char *template_path, char *regex_buffer) {
+void convert_path_to_regex(const char *template_path, char *regex_buffer)
+{
     const char *cursor = template_path;
 
     *regex_buffer = '^';
     regex_buffer++;
     while (*cursor) {
-        if (*cursor == ':') {
-            strcat(regex_buffer, "([^/]+)");
-            regex_buffer += strlen("([^/]+)");
+        if (*cursor != ':') {
+            *regex_buffer = *cursor;
+            regex_buffer++;
             cursor++;
-            while (*cursor && *cursor != '/') cursor++;
-        } else {
-            *regex_buffer++ = *cursor++;
+            continue;
         }
+        strcat(regex_buffer, "([^/]+)");
+        regex_buffer += strlen("([^/]+)");
+        cursor++;
+        while (*cursor && *cursor != '/')
+            cursor++;
     }
-    *regex_buffer++ = '$';
+    regex_buffer++;
+    *regex_buffer = '$';
     *regex_buffer = '\0';
 }
 
-bool check_regex(request_t *request, regex_t *regex) {
+bool check_regex(request_t *request, regex_t *regex)
+{
     char regex_pattern[1024] = {0};
 
     convert_path_to_regex(request->route->template_path, regex_pattern);
@@ -41,7 +47,8 @@ bool check_regex(request_t *request, regex_t *regex) {
     return true;
 }
 
-void extract_params(request_t *request) {
+void extract_params(request_t *request)
+{
     regmatch_t matches[PARAM_ARRAY_SIZE];
     regex_t regex;
     char found_param[PARAM_SIZE];

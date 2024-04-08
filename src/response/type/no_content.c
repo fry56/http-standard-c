@@ -6,13 +6,9 @@
 */
 
 #include <response.h>
-#include <string.h>
 
 response_t *new_no_content(response_t *response)
 {
     response->status_code = 204;
-//    response->body = message;
-//    response->body_length = strlen(message);
-//    add_header_response(response, "Content-Type: text/plain");
     return response;
 }

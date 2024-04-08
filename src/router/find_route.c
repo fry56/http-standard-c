@@ -7,7 +7,8 @@
 #include <regex.h>
 #include "router.h"
 
-route_params_t *find_route(router_t *router, const char *path) {
+route_params_t *find_route(router_t *router, const char *path)
+{
     route_entry_t *entry;
     regmatch_t matches[10];
 

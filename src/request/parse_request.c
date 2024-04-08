@@ -11,7 +11,8 @@
 #include <unistd.h>
 #include <config.h>
 
-method_t string_to_method(const char *method) {
+method_t string_to_method(const char *method)
+{
     for (int i = 0; methods[i].string != NULL; i++) {
         if (strcmp(methods[i].string, method) == 0)
             return methods[i].method;
@@ -19,7 +20,8 @@ method_t string_to_method(const char *method) {
     return INVALID_METHOD;
 }
 
-bool parse_request(int sockfd, request_t *request) {
+bool parse_request(int sockfd, request_t *request)
+{
     char buffer[BUFFER_SIZE];
     char *saveptr;
     char *method;
@@ -27,7 +29,8 @@ bool parse_request(int sockfd, request_t *request) {
     ssize_t bytes_read = read(sockfd, buffer, sizeof(buffer) - 1);
 
     if (bytes_read <= 0) {
-        fprintf(stderr, "Failed to read from socket or connection closed by client.\n");
+        fprintf(stderr, "Failed to read from socket"
+            " or connection closed by client.\n");
         return false;
     }
     buffer[bytes_read] = '\0';

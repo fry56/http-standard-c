@@ -9,7 +9,8 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-static bool execute_route_logic(route_params_t *route, request_t *request, response_t *response)
+static bool execute_route_logic(route_params_t *route, request_t *request,
+    response_t *response)
 {
     if (route->middleware) {
         if (!route->middleware(request, response))

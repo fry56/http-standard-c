@@ -11,7 +11,8 @@
 #include <netinet/in.h>
 #include <unistd.h>
 
-int start_server(int port, router_t *router) {
+int start_server(int port, router_t *router)
+{
     int server_fd = create_server_socket(port);
     struct sockaddr_in client_address;
     socklen_t client_address_len;
@@ -22,7 +23,8 @@ int start_server(int port, router_t *router) {
     printf("Server started on port %d\n", port);
     while (true) {
         client_address_len = sizeof(client_address);
-        client_fd = accept(server_fd, (struct sockaddr *)&client_address, &client_address_len);
+        client_fd = accept(server_fd, (struct sockaddr *)&client_address,
+            &client_address_len);
         if (client_fd == -1) {
             printf("Failed to accept connection");
             continue;
@@ -30,7 +32,4 @@ int start_server(int port, router_t *router) {
         handle_request(client_fd, router);
         close(client_fd);
     }
-    close(server_fd);
-    free_router(router);
-    return 0;
 }

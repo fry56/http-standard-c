@@ -10,9 +10,9 @@
 #include <router.h>
 #include <unistd.h>
 #include <stdio.h>
-#include <stdlib.h>
 
-void handle_request(int socketFd, router_t *router) {
+void handle_request(int socketFd, router_t *router)
+{
     request_t request = {0};
     response_t *response;
 

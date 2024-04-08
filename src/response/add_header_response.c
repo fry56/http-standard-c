@@ -9,7 +9,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-void add_header_response(response_t *response, char *header) {
+void add_header_response(response_t *response, char *header)
+{
     size_t header_count = response->header_count + 1;
 
     response->headers = realloc(response->headers, header_count * 8);

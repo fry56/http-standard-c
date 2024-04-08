@@ -8,7 +8,8 @@
 #include <router.h>
 #include <stdlib.h>
 
-void free_router(router_t *router) {
+void free_router(router_t *router)
+{
     route_entry_t *entry;
 
     if (router == NULL)
