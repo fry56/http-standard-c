@@ -14,6 +14,7 @@
 typedef struct {
     status_code_t status_code;
     char **headers;
+    char *content_type;
     size_t header_count;
     char *body;
     size_t body_length;

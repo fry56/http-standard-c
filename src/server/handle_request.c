@@ -21,9 +21,7 @@ void handle_request(int socketFd, router_t *router) {
         return;
     }
     response = handle_route(router, &request);
-    if (response == NULL) {
-        printf("NULL");
+    if (response == NULL)
         return;
-    }
     send_response(socketFd, response);
 }

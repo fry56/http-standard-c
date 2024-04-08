@@ -20,7 +20,6 @@ SRC = \
 	src/router/find_route.c \
 	\
 	src/server/create_server.c \
-	src/server/accept_connection.c \
 	src/server/handle_client.c \
 	src/server/start_server.c \
 	src/server/handle_request.c \

@@ -7,6 +7,7 @@
 
 #include <router.h>
 
-void init_router(router_t *router) {
+router_t *init_router(router_t *router) {
     TAILQ_INIT(router);
+    return router;
 }

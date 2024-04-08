@@ -9,7 +9,6 @@
 #include <server.h>
 
 #define PORT 8080
-#define BUFFER_SIZE 4096
 
 void handler(request_t *request, response_t *response) {
     char *uuid = "76ba651f-adfd-4b2d-9dd2-db3bd5ee9c3d";
@@ -24,11 +23,9 @@ void handler(request_t *request, response_t *response) {
 
 int main() {
     router_t router;
-    TAILQ_INIT(&router);
 
+    init_router(&router);
     add_route(&router, (route_config_t){"/teams/:teamUuid/users", GET, NULL, handler});
-
     start_server(PORT, &router);
-
     return 0;
 }

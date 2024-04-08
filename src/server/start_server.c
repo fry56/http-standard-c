@@ -23,14 +23,13 @@ int start_server(int port, router_t *router) {
     while (true) {
         client_address_len = sizeof(client_address);
         client_fd = accept(server_fd, (struct sockaddr *)&client_address, &client_address_len);
-        printf("while");
         if (client_fd == -1) {
             printf("Failed to accept connection");
             continue;
         }
         handle_request(client_fd, router);
-        printf("Connection handled\n");
     }
     close(server_fd);
+    free_router(router);
     return 0;
 }
