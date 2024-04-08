@@ -55,7 +55,7 @@ static char *format_http_response(const response_t *response) {
         "Content-Type: %s\r\n"
         "Content-Length: %zu\r\n\r\n",
         response->status_code, get_status_message(response->status_code),
-        "text/plain", strlen(response->body));
+        response->content_type, strlen(response->body));
     if (response->body && response->body_length > 0)
         strcat(http_response + offset, response->body);
     return http_response;
