@@ -19,6 +19,7 @@ void handler(request_t *request, response_t *response) {
     char *value = find_param(request, "teamUuid");
     printf("Team uuid: %s\n", value);
 
+    add_header_response(response, "Content-Type: text/plain");
     if (strcmp(uuid, value) != 0) {
         response->status_code = BAD_REQUEST;
         response->body = "Invalid Uuid";
