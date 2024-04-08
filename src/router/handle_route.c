@@ -31,12 +31,13 @@ response_t *handle_route(router_t *router, request_t *request)
     if (response == NULL)
         return NULL;
     response->header_count = 0;
-    response->body = "";
+    response->body = NULL;
     response->body_length = 0;
     if (route == NULL || route->method != request->method)
         return new_not_found(response, "Route not found");
     request->route = route;
     extract_params(request);
     execute_route_logic(route, request, response);
+    free_request(request);
     return response;
 }

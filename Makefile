@@ -26,6 +26,8 @@ SRC = \
 	\
 	src/response/send_response.c \
 	src/response/add_header_response.c \
+	src/response/find_header.c \
+	src/response/free_response.c \
 	src/response/type/bad_request.c \
 	src/response/type/not_found.c \
 	src/response/type/ok.c \
@@ -40,6 +42,8 @@ SRC = \
 	\
 	src/request/parse_request.c \
 	src/request/find_param.c \
+	src/request/find_header.c \
+	src/request/free_request.c \
 
 OBJ = $(SRC:.c=.o)
 

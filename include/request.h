@@ -30,3 +30,5 @@ typedef struct {
 
 bool parse_request(int sockfd, request_t *request);
 char *find_param(request_t *request, char *param);
+char *find_header_value_request(char *header, request_t *request);
+void free_request(request_t *request);

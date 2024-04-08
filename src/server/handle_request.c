@@ -10,6 +10,7 @@
 #include <router.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 void handle_request(int socketFd, router_t *router) {
     request_t request = {0};
@@ -24,4 +25,5 @@ void handle_request(int socketFd, router_t *router) {
     if (response == NULL)
         return;
     send_response(socketFd, response);
+    free_response(response);
 }

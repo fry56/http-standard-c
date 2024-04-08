@@ -42,20 +42,22 @@ static void add_content_length_header(response_t *response) {
     add_header_response(response, header);
 }
 
-static char *format_http_response(const response_t *response) {
+static char *format_http_response(response_t *response) {
     size_t estimated_length = get_response_length(response);
     char *http_response = malloc(estimated_length + 1);
+    char *content_type = find_header_value_response("Content-Type", response);
 
     if (!http_response) {
         fprintf(stderr, "Failed to allocate memory for HTTP response\n");
         return NULL;
     }
+    printf("Content-Type: %s\n", content_type);
     int offset = snprintf(http_response, estimated_length,
         "HTTP/1.1 %d %s\r\n"
         "Content-Type: %s\r\n"
         "Content-Length: %zu\r\n\r\n",
         response->status_code, get_status_message(response->status_code),
-        response->content_type, strlen(response->body));
+        content_type, strlen(response->body));
     if (response->body && response->body_length > 0)
         strcat(http_response + offset, response->body);
     return http_response;
@@ -77,5 +79,4 @@ void send_response(int client_fd, response_t *response)
     printf("%s", http_response);
     dprintf(client_fd, "%s", http_response);
     free(http_response);
-    close(client_fd);
 }

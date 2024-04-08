@@ -13,6 +13,6 @@ response_t *new_forbidden(response_t *response, char *message)
     response->status_code = 403;
     response->body = message;
     response->body_length = strlen(message);
-    response->content_type = "text/plain";
+    add_header_response(response, "Content-Type: text/plain");
     return response;
 }

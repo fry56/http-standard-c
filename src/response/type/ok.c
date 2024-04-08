@@ -13,6 +13,6 @@ response_t *new_ok(response_t *response, char *message)
     response->status_code = 200;
     response->body = message;
     response->body_length = strlen(message);
-    response->content_type = "text/plain";
+    add_header_response(response, "Content-Type: text/plain");
     return response;
 }

@@ -15,7 +15,7 @@ int start_server(int port, router_t *router) {
     int server_fd = create_server_socket(port);
     struct sockaddr_in client_address;
     socklen_t client_address_len;
-    int client_fd = 0;
+    int client_fd;
 
     if (server_fd == -1)
         return 84;
@@ -28,6 +28,7 @@ int start_server(int port, router_t *router) {
             continue;
         }
         handle_request(client_fd, router);
+        close(client_fd);
     }
     close(server_fd);
     free_router(router);

@@ -14,7 +14,6 @@
 typedef struct {
     status_code_t status_code;
     char **headers;
-    char *content_type;
     size_t header_count;
     char *body;
     size_t body_length;
@@ -22,6 +21,8 @@ typedef struct {
 
 void send_response(int client_fd, response_t *response);
 void add_header_response(response_t *response, char *header);
+char *find_header_value_response(char *header, response_t *response);
+void free_response(response_t *response);
 
 response_t *new_service_unavailable(response_t *response, char *message);
 response_t *new_bad_request(response_t *response, char *message);
