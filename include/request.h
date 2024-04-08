@@ -29,3 +29,4 @@ typedef struct {
 } request_t;
 
 bool parse_request(int sockfd, request_t *request);
+char *find_param(request_t *request, char *param);

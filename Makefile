@@ -5,14 +5,11 @@
 ## desc
 ##
 
-# Variables
 CC = gcc
 RM = rm -f
 
-# Nom de l'exécutable
 EXEC_NAME = http_standard_server
 
-# Sources and objects
 SRC = \
 	src/main.c \
 	\
@@ -29,41 +26,35 @@ SRC = \
 	src/server/handle_request.c \
 	\
 	src/response/send_response.c \
+	src/response/add_header_response.c \
 	\
 	src/request/parse_request.c \
+	src/request/find_param.c \
 
 OBJ = $(SRC:.c=.o)
 
-# Include directory
 INCLUDE_DIR = include
 CFLAGS = -Wextra -Wall -Werror -g -I$(INCLUDE_DIR)
 
-# Default target
 all: $(EXEC_NAME)
 
-# Rule to make the executable
 $(EXEC_NAME): $(OBJ)
 	@echo "Linking $@"
 	$(CC) -o $@ $(OBJ)
 	@echo "Executable created: $(EXEC_NAME)"
 
-# Generic rule for building objects
 %.o: %.c
 	@echo "Compiling $<"
 	$(CC) $(CFLAGS) -c -o $@ $<
 
-# Clean objects and executable
 clean:
 	@echo "Cleaning objects and executable"
 	$(RM) $(OBJ) $(EXEC_NAME)
 
-# Full rebuild
 re: fclean all
 
-# Alias for clean (common convention)
 fclean: clean
 
-# Run the program
 run: $(EXEC_NAME)
 	@echo "Running the program:"
 	./$(EXEC_NAME)

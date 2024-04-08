@@ -6,11 +6,10 @@
 */
 
 #include <router.h>
-#include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
 
-bool execute_route_logic(route_params_t *route, request_t *request, response_t *response)
+static bool execute_route_logic(route_params_t *route, request_t *request, response_t *response)
 {
     if (route->middleware) {
         if (!route->middleware(request, response))
@@ -32,9 +31,13 @@ response_t *handle_route(router_t *router, request_t *request)
 
     if (response == NULL)
         return NULL;
+    response->header_count = 0;
+    response->body_length = 0;
     if (route == NULL) {
         response->status_code = NOT_FOUND;
-        response->body = "Not found";
+        response->body = "404 Not Found: The requested path '/testpath' does not exist on this server.";
+        add_header_response(response, "Content-Type: text/plain");
+        response->body_length = strlen(response->body + 1);
         return response;
     }
     request->route = route;

@@ -29,7 +29,14 @@ static size_t get_response_length(const response_t *response)
     length += 2;
     if (response->body && response->body_length > 0)
         length += response->body_length;
-    return length;
+    return length + 2;
+}
+
+static void add_content_length_header(response_t *response) {
+    char header[50];
+
+    snprintf(header, sizeof(header), "Content-Length: %zu\r\n", response->body_length);
+    add_header_response(response, header);
 }
 
 static char *format_http_response(const response_t *response) {
@@ -53,13 +60,16 @@ static char *format_http_response(const response_t *response) {
 
 void send_response(int client_fd, response_t *response)
 {
-    char *http_response = format_http_response(response);
+    char *http_response;
 
+    add_content_length_header(response);
+    http_response = format_http_response(response);
     if (!http_response) {
         dprintf(client_fd, "%s", "HTTP/1.1 500 Internal Server Error\r\n"
             "Content-Type: text/plain\r\n\r\nInternal Server Error");
         return;
     }
+    printf("%s", http_response);
     dprintf(client_fd, "%s", http_response);
     free(http_response);
 }
