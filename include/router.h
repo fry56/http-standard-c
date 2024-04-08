@@ -7,17 +7,18 @@
 
 #pragma once
 
-#include "method.h"
-#include "request.h"
-#include "response.h"
+#include <method.h>
+#include <request.h>
+#include <response.h>
 #include <sys/queue.h>
 #include <regex.h>
-#include "stdbool.h"
+#include <stdbool.h>
+#include <config.h>
 
 typedef struct route_params_s {
     char *template_path;
     regex_t regex_pattern;
-    char param_names[10][256];
+    char param_names[PARAM_ARRAY_SIZE][PARAM_SIZE];
     size_t param_count;
     method_t method;
     bool (*middleware)(request_t *, response_t *);
@@ -40,5 +41,6 @@ typedef TAILQ_HEAD(router, route_entry) router_t;
 
 route_entry_t *add_route(router_t *router, route_config_t config);
 route_params_t *find_route(router_t *router, const char *path);
+response_t *handle_route(router_t *router, request_t *request);
 void extract_params(request_t *request);
 void free_router(router_t *router);

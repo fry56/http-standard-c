@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <type.h>
+
 typedef enum status_code_e {
     NOT_FOUND = 404,
     OK = 200,
@@ -17,7 +19,8 @@ typedef enum status_code_e {
     FORBIDDEN = 403,
     INTERNAL_SERVER_ERROR = 500,
     NOT_IMPLEMENTED = 501,
-    SERVICE_UNAVAILABLE = 503
+    SERVICE_UNAVAILABLE = 503,
+    INVALID_CODE = 0
 } status_code_t;
 
 typedef struct {
@@ -25,7 +28,7 @@ typedef struct {
     const char *message;
 } status_code_info_t;
 
-const status_code_info_t status_codes[] = {
+static status_code_info_t status_codes[] UNUSED = {
     {OK, "OK"},
     {CREATED, "Created"},
     {NO_CONTENT, "No Content"},

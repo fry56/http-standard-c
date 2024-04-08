@@ -10,14 +10,14 @@
 #include <stdlib.h>
 #include <string.h>
 
-const char *get_status_message(status_code_t status_code) {
+static const char *get_status_message(status_code_t status_code) {
     for (const status_code_info_t *info = status_codes; info->message != NULL; info++)
         if (info->code == status_code)
             return info->message;
     return "Unknown";
 }
 
-size_t get_response_length(const response_t *response)
+static size_t get_response_length(const response_t *response)
 {
     size_t length = 0;
 
@@ -32,7 +32,7 @@ size_t get_response_length(const response_t *response)
     return length;
 }
 
-char *format_http_response(const response_t *response) {
+static char *format_http_response(const response_t *response) {
     size_t estimated_length = get_response_length(response);
     char *http_response = malloc(estimated_length);
 
@@ -50,7 +50,6 @@ char *format_http_response(const response_t *response) {
         strcat(http_response, response->body);
     return http_response;
 }
-
 
 void send_response(int client_fd, response_t *response)
 {

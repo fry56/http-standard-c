@@ -26,8 +26,11 @@ SRC = \
 	src/server/accept_connection.c \
 	src/server/handle_client.c \
 	src/server/start_server.c \
+	src/server/handle_request.c \
 	\
 	src/response/send_response.c \
+	\
+	src/request/parse_request.c \
 
 OBJ = $(SRC:.c=.o)
 

@@ -7,8 +7,10 @@
 
 #pragma once
 
-#include "method.h"
+#include <method.h>
 #include <stddef.h>
+#include <stdbool.h>
+#include <config.h>
 
 typedef struct {
     char *key;
@@ -22,6 +24,8 @@ typedef struct {
     method_t method;
     char **headers;
     size_t header_count;
-    param_t params[10];
+    param_t params[PARAM_ARRAY_SIZE];
     size_t param_count;
 } request_t;
+
+bool parse_request(int sockfd, request_t *request);

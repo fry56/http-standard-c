@@ -7,46 +7,91 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <router.h>
-#include <response.h>
-#include <string.h>
+#include <netinet/in.h>
+#include <unistd.h>
+
+#define PORT 8081
+#define BUFFER_SIZE 4096
 
 int main() {
-    // Setup a sample response structure
-    response_t response = {
-            .status_code = 200,  // HTTP status code
-            .header_count = 2,   // Number of headers
-            .body = "Hello, World!",  // Response body
-            .body_length = strlen("Hello, World!")  // Length of the body
-    };
+    int server_fd, new_socket;
+    struct sockaddr_in address;
+    int addrlen = sizeof(address);
+//    char buffer[BUFFER_SIZE] = {0};
 
-    // Allocate memory for headers
-    response.headers = malloc(response.header_count * sizeof(char *));
-    if (!response.headers) {
-        fprintf(stderr, "Failed to allocate memory for headers\n");
-        return EXIT_FAILURE;
+    // Creating socket file descriptor
+    if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
+        perror("socket failed");
+        exit(EXIT_FAILURE);
     }
 
-    // Set headers
-    response.headers[0] = strdup("Content-Type: text/html; charset=UTF-8");
-    response.headers[1] = strdup("Connection: close");
+    // Forcefully attaching socket to the port 8080
+    address.sin_family = AF_INET;
+    address.sin_addr.s_addr = INADDR_ANY;
+    address.sin_port = htons(PORT);
 
-    // Format the HTTP response
-    char *http_response = format_http_response(&response);
-    if (http_response) {
-        printf("Formatted HTTP Response:\n%s", http_response);
-        free(http_response);
-    } else {
-        fprintf(stderr, "Failed to format HTTP response\n");
+    if (bind(server_fd, (struct sockaddr *)&address, sizeof(address)) < 0) {
+        perror("bind failed");
+        exit(EXIT_FAILURE);
     }
 
-    // Clean up allocated memory
-    for (size_t i = 0; i < response.header_count; i++) {
-        free(response.headers[i]);
+    if (listen(server_fd, 3) < 0) {
+        perror("listen");
+        exit(EXIT_FAILURE);
     }
-    free(response.headers);
 
-    return EXIT_SUCCESS;
+    if ((new_socket = accept(server_fd, (struct sockaddr *)&address, (socklen_t*)&addrlen)) < 0) {
+        perror("accept");
+        exit(EXIT_FAILURE);
+    }
+
+    request_t request;
+    if (parse_request(new_socket, &request)) {
+//        printf("Method: %d\n", request.method);
+        printf("Path: %s\n", request.path);
+        printf("Body: %s\n", request.body);
+    }
+
+    return 0;
 }
+
+//int main() {
+//    // Setup a sample response structure
+//    response_t response = {
+//            .status_code = 200,  // HTTP status code
+//            .header_count = 2,   // Number of headers
+//            .body = "Hello, World!",  // Response body
+//            .body_length = strlen("Hello, World!")  // Length of the body
+//    };
+//
+//    // Allocate memory for headers
+//    response.headers = malloc(response.header_count * sizeof(char *));
+//    if (!response.headers) {
+//        fprintf(stderr, "Failed to allocate memory for headers\n");
+//        return EXIT_FAILURE;
+//    }
+//
+//    // Set headers
+//    response.headers[0] = strdup("Content-Type: text/html; charset=UTF-8");
+//    response.headers[1] = strdup("Connection: close");
+//
+//    // Format the HTTP response
+////    char *http_response = format_http_response(&response);
+////    if (http_response) {
+////        printf("Formatted HTTP Response:\n%s", http_response);
+////        free(http_response);
+////    } else {
+////        fprintf(stderr, "Failed to format HTTP response\n");
+////    }
+////
+////    // Clean up allocated memory
+////    for (size_t i = 0; i < response.header_count; i++) {
+////        free(response.headers[i]);
+////    }
+////    free(response.headers);
+////
+////    return EXIT_SUCCESS;
+//}
 
 //int main() {
 //    router_t router;

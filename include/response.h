@@ -18,4 +18,4 @@ typedef struct {
     size_t body_length;
 } response_t;
 
-char *format_http_response(const response_t *response);
+void send_response(int client_fd, response_t *response);
