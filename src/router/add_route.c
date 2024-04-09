@@ -25,8 +25,11 @@ static void parse_and_store_param_names(const char *template_path,
         }
         name_len = 0;
         cursor++;
-        while (*cursor != '/' && *cursor != '\0' && name_len < 255)
-            param_names[*param_count][name_len++] = *cursor++;
+        while (*cursor != '/' && *cursor != '\0' && name_len < 255) {
+            param_names[*param_count][name_len] = *cursor;
+            name_len++;
+            cursor++;
+        }
         param_names[*param_count][name_len] = '\0';
         (*param_count)++;
     }
@@ -53,8 +56,6 @@ static void compile_regex_for_route(route_params_t *route)
     *dest = '$';
     dest++;
     *dest = '\0';
-    if (regcomp(&route->regex_pattern, regex_pattern, REG_EXTENDED) != 0)
-        fprintf(stderr, "Failed to compile regex: %s\n", regex_pattern);
 }
 
 route_entry_t *add_route(router_t *router, route_config_t config)

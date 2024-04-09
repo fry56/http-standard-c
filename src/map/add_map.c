@@ -26,4 +26,3 @@ map_t *add_map(map_t ***map, char *key, char *value, size_t *length)
     *map = new_map;
     return new_map_elem;
 }
-

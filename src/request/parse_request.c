@@ -20,22 +20,29 @@ static method_t string_to_method(const char *method)
     return INVALID_METHOD;
 }
 
-static void trim_whitespace(char **str) {
+static void trim_whitespace(char **str)
+{
     char *s = *str;
     char *end;
 
-    while (isspace((unsigned char)*s)) s++;
+    while (isspace((unsigned char)*s))
+        s++;
     *str = s;
     end = s + strlen(s) - 1;
-    while (end > s && isspace((unsigned char)*end)) *end-- = '\0';
+    while (end > s && isspace((unsigned char)*end)) {
+        *end = '\0';
+        end--;
+    }
 }
 
-static void process_header_line(char *line, request_t *request) {
+static void process_header_line(char *line, request_t *request)
+{
     char *colon = strchr(line, ':');
     char *key;
     char *value;
 
-    if (!colon) return;
+    if (!colon)
+        return;
     *colon = '\0';
     key = line;
     value = colon + 1;
@@ -44,8 +51,8 @@ static void process_header_line(char *line, request_t *request) {
     add_map(&request->headers, key, value, &request->header_count);
 }
 
-
-void parse_headers(char *header_str, request_t *request) {
+void parse_headers(char *header_str, request_t *request)
+{
     char *line;
     char *saveptr_header;
 

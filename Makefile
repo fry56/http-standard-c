@@ -5,14 +5,7 @@
 ## desc
 ##
 
-CC = gcc
-RM = rm -f
-
-EXEC_NAME = http_standard_server
-
 SRC = \
-	src/main.c \
-	\
 	src/router/free_router.c \
 	src/router/handle_route.c \
 	src/router/add_route.c \
@@ -47,30 +40,28 @@ SRC = \
 
 OBJ = $(SRC:.c=.o)
 
-INCLUDE_DIR = include
-CFLAGS = -Wextra -Wall -Werror -g -I$(INCLUDE_DIR)
+GCC = gcc
 
-all: $(EXEC_NAME)
+INCLUDE_FLAGS = \
+	-I include
 
-$(EXEC_NAME): $(OBJ)
-	@echo "Linking $@"
-	$(CC) -o $@ $(OBJ)
-	@echo "Executable created: $(EXEC_NAME)"
+C_WARNING_FLAGS = -Wextra -Wall -g
+C_FLAGS = $(C_WARNING_FLAGS) $(INCLUDE_FLAGS)
 
-%.o: %.c
-	@echo "Compiling $<"
-	$(CC) $(CFLAGS) -c -o $@ $<
+.c.o:
+	@echo "$(notdir $(CURDIR)): C '$<'"
+	@$(GCC) $(C_FLAGS) -c -o $*.o $<
+
+all: http_standard.a
+.PHONY : all
+
+http_standard.a: $(OBJ)
+	@ar rc $@ $(OBJ)
+.PHONY : http_standard.a
 
 clean:
-	@echo "Cleaning objects and executable"
-	$(RM) $(OBJ) $(EXEC_NAME)
+	@find . \( -name "*.o" -or -name "*.a" \) -delete
+.PHONY : clean
 
-re: fclean all
-
-fclean: clean
-
-run: $(EXEC_NAME)
-	@echo "Running the program:"
-	./$(EXEC_NAME)
-
-.PHONY: all clean fclean re run
+re: clean all
+.PHONY: re

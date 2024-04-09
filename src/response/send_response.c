@@ -41,11 +41,13 @@ static void add_content_length_header(response_t *response)
     char *str = malloc(20);
 
     if (!str) {
-        fprintf(stderr, "Failed to allocate memory for Content-Length header\n");
+        fprintf(stderr, "Failed to allocate "
+            "memory for Content-Length header\n");
         return;
     }
     sprintf(str, "%zu", response->body_length);
-    add_map(&response->headers, "Content-Length", str, &response->header_count);
+    add_map(&response->headers, "Content-Length",
+        str, &response->header_count);
 }
 
 static char *format_http_response(response_t *response)
