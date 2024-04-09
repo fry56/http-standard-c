@@ -35,27 +35,46 @@ static void parse_and_store_param_names(const char *template_path,
     }
 }
 
+static void end_of_string(route_params_t *route, char *dest,
+    const char *regex_pattern)
+{
+    *dest = '$';
+    dest++;
+    *dest = '\0';
+    if (regcomp(&route->regex_pattern, regex_pattern, REG_EXTENDED) != 0)
+        fprintf(stderr, "Failed to compile regex: %s\n", regex_pattern);
+}
+
 static void compile_regex_for_route(route_params_t *route)
 {
-    char regex_pattern[1024] = "^";
+    char regex_pattern[1024];
     const char *src = route->template_path;
-    char *dest = regex_pattern + 1;
+    char *dest = regex_pattern;
 
+    *dest = '^';
+    dest++;
     while (*src) {
         if (*src != ':') {
             *dest = *src;
             dest++;
             src++;
+            continue;
         }
         strcpy(dest, "([^/]+)");
         dest += strlen("([^/]+)");
-        src++;
         while (*src && *src != '/')
             src++;
     }
-    *dest = '$';
-    dest++;
-    *dest = '\0';
+    end_of_string(route, dest, regex_pattern);
+}
+
+const char *method_to_string(method_t method)
+{
+    for (int i = 0; methods[i].string != NULL; i++) {
+        if (methods[i].method == method)
+            return methods[i].string;
+    }
+    return NULL;
 }
 
 route_entry_t *add_route(router_t *router, route_config_t config)
@@ -75,5 +94,6 @@ route_entry_t *add_route(router_t *router, route_config_t config)
         &new_entry->params.param_count);
     compile_regex_for_route(&new_entry->params);
     TAILQ_INSERT_TAIL(router, new_entry, entries);
+    printf("[%s] %s\n", method_to_string(config.method), config.template_path);
     return new_entry;
 }
