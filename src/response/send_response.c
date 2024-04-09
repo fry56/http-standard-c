@@ -86,7 +86,6 @@ void send_response(int client_fd, response_t *response)
         }
         return;
     }
-    printf("%s", http_response);
     dprintf(client_fd, "%s", http_response);
     free(http_response);
 }
