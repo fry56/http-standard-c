@@ -58,7 +58,7 @@ void parse_headers(char *header_str, request_t *request) {
 
 bool parse_request(int sockfd, request_t *request)
 {
-    char buffer[BUFFER_SIZE];
+    char buffer[BUFFER_SIZE] = {0};
     char *saveptr;
     char *method;
     char *path;
