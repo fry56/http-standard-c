@@ -7,21 +7,10 @@
 
 #include <request.h>
 #include <stdlib.h>
+#include <map.h>
 
 void free_request(request_t *request)
 {
-    if (request->path)
-        free(request->path);
-    if (request->body)
-        free(request->body);
-    for (size_t i = 0; i < request->param_count; i++) {
-        free(request->params[i].key);
-        free(request->params[i].value);
-    }
-    if (request->headers) {
-        for (size_t i = 0; i < request->header_count; i++) {
-            free(request->headers[i]);
-        }
-        free(request->headers);
-    }
+    free_map(request->params, request->param_count);
+    free_map(request->headers, request->header_count);
 }

@@ -13,17 +13,23 @@
 
 void handle_request(int socketFd, router_t *router)
 {
-    request_t request = {0};
+    request_t *request = calloc(1, sizeof(request_t));
     response_t *response;
 
-    if (!parse_request(socketFd, &request)) {
+    if (request == NULL) {
+        printf("Error allocating memory\n");
+        close(socketFd);
+        return;
+    }
+    if (!parse_request(socketFd, request)) {
         printf("Error parsing request\n");
         close(socketFd);
         return;
     }
-    response = handle_route(router, &request);
+    response = handle_route(router, request);
     if (response == NULL)
         return;
     send_response(socketFd, response);
     free_response(response);
+    free_request(request);
 }

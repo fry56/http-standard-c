@@ -10,18 +10,17 @@
 #include <stddef.h>
 #include <status_code.h>
 #include <config.h>
+#include <map.h>
 
 typedef struct {
     status_code_t status_code;
-    char **headers;
+    map_t **headers;
     size_t header_count;
     char *body;
     size_t body_length;
 } response_t;
 
 void send_response(int client_fd, response_t *response);
-void add_header_response(response_t *response, char *header);
-char *find_header_value_response(char *header, response_t *response);
 void free_response(response_t *response);
 
 response_t *new_service_unavailable(response_t *response, char *message);

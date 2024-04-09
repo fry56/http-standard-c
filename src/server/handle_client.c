@@ -61,10 +61,8 @@ void extract_params(request_t *request)
             strncpy(found_param, request->path + matches[i].rm_so,
                     matches[i].rm_eo - matches[i].rm_so);
             found_param[matches[i].rm_eo - matches[i].rm_so] = '\0';
-            request->params[request->param_count].key =
-                    strdup(request->route->param_names[i - 1]);
-            request->params[request->param_count].value = strdup(found_param);
-            request->param_count++;
+            add_map(&request->params, request->route->param_names[i - 1],
+                    found_param, &request->param_count);
         }
     }
     regfree(&regex);

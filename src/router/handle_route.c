@@ -39,6 +39,5 @@ response_t *handle_route(router_t *router, request_t *request)
     request->route = route;
     extract_params(request);
     execute_route_logic(route, request, response);
-    free_request(request);
     return response;
 }
