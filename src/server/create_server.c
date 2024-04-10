@@ -8,7 +8,7 @@
 #include <netinet/in.h>
 #include <server.h>
 
-server_t *create_server(int port, router_t *router)
+server_t *create_server(int port, list *router)
 {
     server_t *server = calloc(1, sizeof(server_t));
     int opt = 1;

@@ -14,8 +14,9 @@
 #include <regex.h>
 #include <stdbool.h>
 #include <config.h>
+#include <list.h>
 
-typedef struct route_params_s {
+typedef struct route_s {
     char *template_path;
     regex_t regex_pattern;
     char param_names[PARAM_ARRAY_SIZE][PARAM_SIZE];
@@ -23,7 +24,7 @@ typedef struct route_params_s {
     method_t method;
     bool (*middleware)(request_t *, response_t *);
     void (*handler)(request_t *, response_t *);
-} route_params_t;
+} route_s;
 
 typedef struct {
     char *template_path;
@@ -32,15 +33,7 @@ typedef struct {
     void (*handler)(request_t *, response_t *);
 } route_config_t;
 
-typedef struct route_entry {
-    route_params_t params;
-    TAILQ_ENTRY(route_entry) entries;
-} route_entry_t;
-
-typedef TAILQ_HEAD(router, route_entry) router_t;
-
-route_entry_t *add_route(router_t *router, route_config_t config);
-route_params_t *find_route(router_t *router, const char *path);
-response_t *handle_route(router_t *router, request_t *request);
+route_s *add_route(list *router, route_config_t config);
+route_s *find_route(list *router, const char *path);
+response_t *handle_route(list *router, request_t *request);
 void extract_params(request_t *request);
-void free_router(router_t *router);

@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <regex.h>
+#include <list.h>
 
 static void parse_and_store_param_names(const char *template_path,
     char param_names[10][256], size_t *param_count)
@@ -35,7 +36,7 @@ static void parse_and_store_param_names(const char *template_path,
     }
 }
 
-static void end_of_string(route_params_t *route, char *dest,
+static void end_of_string(route_s *route, char *dest,
     const char *regex_pattern)
 {
     *dest = '$';
@@ -45,7 +46,7 @@ static void end_of_string(route_params_t *route, char *dest,
         fprintf(stderr, "Failed to compile regex: %s\n", regex_pattern);
 }
 
-static void compile_regex_for_route(route_params_t *route)
+static void compile_regex_for_route(route_s *route)
 {
     char regex_pattern[1024];
     const char *src = route->template_path;
@@ -77,23 +78,23 @@ const char *method_to_string(method_t method)
     return NULL;
 }
 
-route_entry_t *add_route(router_t *router, route_config_t config)
+route_s *add_route(list *router, route_config_t config)
 {
-    route_entry_t *new_entry = malloc(sizeof(route_entry_t));
+    route_s *new_entry = malloc(sizeof(route_s));
 
     if (new_entry == NULL) {
         fprintf(stderr, "Memory allocation failed\n");
         return NULL;
     }
-    new_entry->params.template_path = strdup(config.template_path);
-    new_entry->params.method = config.method;
-    new_entry->params.middleware = config.middleware;
-    new_entry->params.handler = config.handler;
+    new_entry->template_path = strdup(config.template_path);
+    new_entry->method = config.method;
+    new_entry->middleware = config.middleware;
+    new_entry->handler = config.handler;
     parse_and_store_param_names(config.template_path,
-        new_entry->params.param_names,
-        &new_entry->params.param_count);
-    compile_regex_for_route(&new_entry->params);
-    TAILQ_INSERT_TAIL(router, new_entry, entries);
+        new_entry->param_names,
+        &new_entry->param_count);
+    compile_regex_for_route(new_entry);
+    list_add(router, new_entry);
     printf("[%s] %s\n", method_to_string(config.method), config.template_path);
     return new_entry;
 }

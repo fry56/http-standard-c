@@ -15,7 +15,7 @@
 
 typedef struct {
     char *path;
-    struct route_params_s *route;
+    struct route_s *route;
     char *body;
     method_t method;
 

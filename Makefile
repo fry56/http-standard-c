@@ -6,10 +6,8 @@
 ##
 
 SRC = \
-	src/router/free_router.c \
 	src/router/handle_route.c \
 	src/router/add_route.c \
-	src/router/init_router.c \
 	src/router/find_route.c \
 	\
 	src/server/create_server.c \
@@ -43,7 +41,8 @@ GCC = gcc
 
 INCLUDE_FLAGS = \
 	-I include \
-	-I ../simple-map-c/include
+	-I ../simple-map-c/include \
+	-I ../simple-list-c/include
 
 C_WARNING_FLAGS = -Wextra -Wall -g
 C_FLAGS = $(C_WARNING_FLAGS) $(INCLUDE_FLAGS)

@@ -10,7 +10,7 @@
 #include <stdbool.h>
 #include <unistd.h>
 
-int start_server(int port, router_t *router)
+int start_server(int port, list *router)
 {
     server_t *server = create_server(port, router);
     struct sockaddr_in client_address;

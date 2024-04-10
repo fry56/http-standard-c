@@ -7,13 +7,12 @@
 #include <regex.h>
 #include "router.h"
 
-route_params_t *find_route(router_t *router, const char *path)
+route_s *find_route(list *router, const char *path)
 {
-    route_entry_t *entry;
     regmatch_t matches[10];
 
-    TAILQ_FOREACH(entry, router, entries)
-        if (regexec(&entry->params.regex_pattern, path, 10, matches, 0) == 0)
-            return &entry->params;
+    list_foreach(router, entry)
+        if (regexec(&((route_s *)entry->value)->regex_pattern, path, 10, matches, 0) == 0)
+            return entry->value;
     return NULL;
 }
