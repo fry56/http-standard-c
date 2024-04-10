@@ -10,26 +10,29 @@
 #include <router.h>
 #include <unistd.h>
 #include <stdio.h>
+#include <server.h>
 
-void handle_request(int socketFd, router_t *router)
+void handle_request(int client_fd, server_t *server)
 {
     request_t *request = calloc(1, sizeof(request_t));
     response_t *response;
 
     if (request == NULL) {
         printf("Error allocating memory\n");
-        close(socketFd);
+        close(client_fd);
         return;
     }
-    if (!parse_request(socketFd, request)) {
-        printf("Error parsing request\n");
-        close(socketFd);
+    request->headers = map_new();
+    request->params = map_new();
+    request->cache = server->cache;
+    if (!parse_request(client_fd, request)) {
+        close(client_fd);
         return;
     }
-    response = handle_route(router, request);
+    response = handle_route(server->router, request);
     if (response == NULL)
         return;
-    send_response(socketFd, response);
+    send_response(client_fd, response);
     free_response(response);
     free_request(request);
 }

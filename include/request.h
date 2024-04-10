@@ -11,7 +11,7 @@
 #include <stddef.h>
 #include <stdbool.h>
 #include <config.h>
-#include <map.h>
+#include "map.h"
 
 typedef struct {
     char *path;
@@ -19,11 +19,9 @@ typedef struct {
     char *body;
     method_t method;
 
-    map_t **headers;
-    size_t header_count;
-
-    map_t **params;
-    size_t param_count;
+    map *headers;
+    map *params;
+    map *cache;
 } request_t;
 
 bool parse_request(int sockfd, request_t *request);

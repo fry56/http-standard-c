@@ -7,10 +7,11 @@
 
 #include <response.h>
 #include <stdlib.h>
-#include <map.h>
 
 void free_response(response_t *response)
 {
-    free_map(response->headers, response->header_count);
+    map_foreach(response->headers, elem)
+        free(elem->key);
+    free(response->headers);
     free(response);
 }

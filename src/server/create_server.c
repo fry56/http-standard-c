@@ -6,21 +6,24 @@
 */
 
 #include <netinet/in.h>
+#include <server.h>
 
-int create_server_socket(int port)
+server_t *create_server(int port, router_t *router)
 {
-    int server_fd;
-    struct sockaddr_in address;
+    server_t *server = calloc(1, sizeof(server_t));
     int opt = 1;
 
-    server_fd = socket(AF_INET, SOCK_STREAM, 0);
-    setsockopt(server_fd, SOL_SOCKET,
+    server->socketFd = socket(AF_INET, SOCK_STREAM, 0);
+    setsockopt(server->socketFd, SOL_SOCKET,
         SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt));
-    address.sin_family = AF_INET;
-    address.sin_addr.s_addr = INADDR_ANY;
-    address.sin_port = htons(port);
-    if (bind(server_fd, (struct sockaddr *)&address, sizeof(address)) == -1)
-        return -1;
-    listen(server_fd, 10);
-    return server_fd;
+    server->address.sin_family = AF_INET;
+    server->address.sin_addr.s_addr = INADDR_ANY;
+    server->address.sin_port = htons(port);
+    if (bind(server->socketFd, (struct sockaddr *)&server->address,
+        sizeof(server->address)) == -1)
+        return NULL;
+    listen(server->socketFd, 10);
+    server->cache = map_new();
+    server->router = router;
+    return server;
 }

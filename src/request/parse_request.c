@@ -9,31 +9,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <config.h>
-#include <ctype.h>
-
-static method_t string_to_method(const char *method)
-{
-    for (int i = 0; methods[i].string != NULL; i++) {
-        if (strcmp(methods[i].string, method) == 0)
-            return methods[i].method;
-    }
-    return INVALID_METHOD;
-}
-
-static void trim_whitespace(char **str)
-{
-    char *s = *str;
-    char *end;
-
-    while (isspace((unsigned char)*s))
-        s++;
-    *str = s;
-    end = s + strlen(s) - 1;
-    while (end > s && isspace((unsigned char)*end)) {
-        *end = '\0';
-        end--;
-    }
-}
+#include <utils.h>
 
 static void process_header_line(char *line, request_t *request)
 {
@@ -48,40 +24,51 @@ static void process_header_line(char *line, request_t *request)
     value = colon + 1;
     trim_whitespace(&key);
     trim_whitespace(&value);
-    add_map(&request->headers, key, value, &request->header_count);
+    map_add(request->headers, strdup(key), strdup(value));
 }
 
-void parse_headers(char *header_str, request_t *request)
+static void parse_headers(char *header_str, request_t *request)
 {
     char *line;
     char *saveptr_header;
 
     line = strtok_r(header_str, "\r\n", &saveptr_header);
-    while (line != NULL && request->header_count < HEADER_ARRAY_SIZE) {
+    while (line != NULL && request->headers->length < HEADER_ARRAY_SIZE) {
         process_header_line(line, request);
         line = strtok_r(NULL, "\r\n", &saveptr_header);
+    }
+}
+
+void parse_body(request_t *request, char *saveptr)
+{
+    char *header_end = strstr(saveptr, "\r\n\r\n");
+
+    if (header_end) {
+        *header_end = '\0';
+        parse_headers(saveptr, request);
+        request->body = strdup(header_end + 4);
+    } else {
+        request->body = strdup("");
     }
 }
 
 bool parse_request(int sockfd, request_t *request)
 {
     char buffer[BUFFER_SIZE] = {0};
+    ssize_t bytes_read = read(sockfd, buffer, sizeof(buffer) - 1);
     char *saveptr;
     char *method;
     char *path;
-    ssize_t bytes_read = read(sockfd, buffer, sizeof(buffer) - 1);
 
-    if (bytes_read <= 0) {
-        fprintf(stderr, "Failed to read from socket"
-            " or connection closed by client.\n");
+    if (bytes_read <= 0)
         return false;
-    }
-    parse_headers(buffer, request);
     buffer[bytes_read] = '\0';
     method = strtok_r(buffer, " ", &saveptr);
     path = strtok_r(NULL, " ", &saveptr);
+    if (!method || !path)
+        return false;
     request->method = string_to_method(method);
     request->path = strdup(path);
-    request->body = strdup(saveptr);
+    parse_body(request, saveptr);
     return true;
 }

@@ -13,7 +13,6 @@ response_t *new_bad_request(response_t *response, char *message)
     response->status_code = 400;
     response->body = message;
     response->body_length = strlen(message);
-    add_map(&response->headers, "Content-Type",
-        "text/plain", &response->header_count);
+    map_add(response->headers, "Content-Type", "text/plain");
     return response;
 }

@@ -34,16 +34,16 @@ SRC = \
 	src/request/parse_request.c \
 	src/request/free_request.c \
 	\
-	src/map/free_map.c \
-	src/map/add_map.c \
-	src/map/find_map.c \
+	src/utils/string_to_method.c \
+	src/utils/trim_whitespace.c \
 
 OBJ = $(SRC:.c=.o)
 
 GCC = gcc
 
 INCLUDE_FLAGS = \
-	-I include
+	-I include \
+	-I ../simple-map-c/include
 
 C_WARNING_FLAGS = -Wextra -Wall -g
 C_FLAGS = $(C_WARNING_FLAGS) $(INCLUDE_FLAGS)

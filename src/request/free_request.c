@@ -11,6 +11,14 @@
 
 void free_request(request_t *request)
 {
-    free_map(request->params, request->param_count);
-    free_map(request->headers, request->header_count);
+    map_foreach(request->params, elem) {
+        free(elem->key);
+        free(elem->value);
+    }
+    free(request->params);
+    map_foreach(request->headers, elem) {
+        free(elem->value);
+        free(elem->key);
+    }
+    free(request->headers);
 }

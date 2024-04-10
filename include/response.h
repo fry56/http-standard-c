@@ -10,12 +10,11 @@
 #include <stddef.h>
 #include <status_code.h>
 #include <config.h>
-#include <map.h>
+#include "map.h"
 
 typedef struct {
     status_code_t status_code;
-    map_t **headers;
-    size_t header_count;
+    map *headers;
     char *body;
     size_t body_length;
 } response_t;
