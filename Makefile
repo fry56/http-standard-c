@@ -28,12 +28,14 @@ SRC = \
 	src/response/type/service_unavailable.c \
 	src/response/type/conflict.c \
 	src/response/type/not_implemented.c \
+	src/response/xml_error.c \
 	\
 	src/request/parse_request.c \
 	src/request/free_request.c \
 	\
 	src/utils/string_to_method.c \
 	src/utils/trim_whitespace.c \
+	src/utils/get_status_message.c \
 
 OBJ = $(SRC:.c=.o)
 
@@ -42,7 +44,8 @@ GCC = gcc
 INCLUDE_FLAGS = \
 	-I include \
 	-I ../simple-map-c/include \
-	-I ../simple-list-c/include
+	-I ../simple-list-c/include \
+	-I ../simple-xml-c/include
 
 C_WARNING_FLAGS = -Wextra -Wall -g
 C_FLAGS = $(C_WARNING_FLAGS) $(INCLUDE_FLAGS)

@@ -11,12 +11,13 @@
 #include <stddef.h>
 #include <stdbool.h>
 #include <config.h>
+#include <xml.h>
 #include "map.h"
 
 typedef struct {
     char *path;
     struct route_s *route;
-    char *body;
+    xml *body;
     method_t method;
 
     map *headers;

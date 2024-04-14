@@ -9,17 +9,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <utils.h>
 
-static const char *get_status_message(status_code_t status_code)
-{
-    for (const status_code_info_t *info = status_codes;
-        info->message != NULL; info++)
-        if (info->code == status_code)
-            return info->message;
-    return "Unknown";
-}
-
-static size_t get_response_length(response_t *response)
+static size_t get_response_length(response_t *response, size_t body_length)
 {
     size_t length = 0;
 
@@ -29,12 +21,12 @@ static size_t get_response_length(response_t *response)
     map_foreach(response->headers, elem)
         length += strlen(elem->key) + strlen(elem->value) + 4;
     length += 2;
-    if (response->body && response->body_length > 0)
-        length += response->body_length;
+    if (response->body)
+        length += body_length;
     return length + 2;
 }
 
-static void add_content_length_header(response_t *response)
+static void add_content_length_header(response_t *response, size_t body_length)
 {
     char *str = malloc(20);
 
@@ -43,13 +35,13 @@ static void add_content_length_header(response_t *response)
             "memory for Content-Length header\n");
         return;
     }
-    sprintf(str, "%zu", response->body_length);
+    sprintf(str, "%zu", body_length);
     map_add(response->headers, "Content-Length", str);
 }
 
-static char *format_http_response(response_t *response)
+static char *format_http_response(response_t *response, char *str_body)
 {
-    size_t estimated_length = get_response_length(response);
+    size_t estimated_length = get_response_length(response, strlen(str_body));
     char *http_response = malloc(estimated_length + 1);
     size_t offset;
 
@@ -64,17 +56,18 @@ static char *format_http_response(response_t *response)
         offset += sprintf(http_response + offset, "%s: %s\r\n",
             elem->key, (char*)elem->value);
     strcat(http_response + offset, "\r\n");
-    if (response->body && response->body_length > 0)
-        strcat(http_response + offset, response->body);
+    if (str_body)
+        strcat(http_response + offset, str_body);
     return http_response;
 }
 
 void send_response(int client_fd, response_t *response)
 {
     char *http_response;
+    char *str_body = response->body ? xml_str(response->body) : "";
 
-    add_content_length_header(response);
-    http_response = format_http_response(response);
+    add_content_length_header(response, strlen(str_body));
+    http_response = format_http_response(response, str_body);
     if (!http_response) {
         if (response->status_code != INTERNAL_SERVER_ERROR) {
             new_internal_server_error(response,

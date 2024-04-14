@@ -33,7 +33,6 @@ response_t *handle_route(list *router, request_t *request)
         return NULL;
     response->headers = map_new();
     response->body = NULL;
-    response->body_length = 0;
     if (route == NULL || route->method != request->method)
         return new_not_found(response, "Route not found");
     request->route = route;

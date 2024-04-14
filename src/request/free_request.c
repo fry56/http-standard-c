@@ -21,4 +21,5 @@ void free_request(request_t *request)
         free(elem->key);
     }
     free(request->headers);
+    xml_free(request->body);
 }

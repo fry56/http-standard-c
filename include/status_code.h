@@ -8,6 +8,7 @@
 #pragma once
 
 #include <type.h>
+#include <stddef.h>
 
 typedef enum status_code_e {
     NOT_FOUND = 404,

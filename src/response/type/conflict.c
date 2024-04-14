@@ -11,8 +11,7 @@
 response_t *new_conflict(response_t *response, char *message)
 {
     response->status_code = 409;
-    response->body = message;
-    response->body_length = strlen(message);
-    map_add(response->headers, "Content-Type", "text/plain");
+    response->body = xml_error(409, message);
+    map_add(response->headers, "Content-Type", "application/xml");
     return response;
 }

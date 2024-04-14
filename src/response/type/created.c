@@ -8,11 +8,10 @@
 #include <response.h>
 #include <string.h>
 
-response_t *new_create(response_t *response, char *message)
+response_t *new_create(response_t *response, xml *body)
 {
     response->status_code = 201;
-    response->body = message;
-    response->body_length = strlen(message);
-    map_add(response->headers, "Content-Type", "text/plain");
+    response->body = body;
+    map_add(response->headers, "Content-Type", "application/xml");
     return response;
 }

@@ -42,13 +42,11 @@ static void parse_headers(char *header_str, request_t *request)
 void parse_body(request_t *request, char *saveptr)
 {
     char *header_end = strstr(saveptr, "\r\n\r\n");
-
+    request->body = xml_new();
     if (header_end) {
         *header_end = '\0';
         parse_headers(saveptr, request);
-        request->body = strdup(header_end + 4);
-    } else {
-        request->body = strdup("");
+        xml_parser(request->body, header_end + 4);
     }
 }
 
