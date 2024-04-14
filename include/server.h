@@ -17,7 +17,7 @@ typedef struct server_s {
     list *router;
 } server_t;
 
-server_t *create_server(int port, list *router);
-int start_server(int port, list *router);
+server_t *create_server(int port, list *router, map *cache);
+int start_server(int port, list *router, map *cache);
 void handle_request(int clientFd, server_t *server);
 void convert_path_to_regex(const char *template_path, char *regex_buffer);

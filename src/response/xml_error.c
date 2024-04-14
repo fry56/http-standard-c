@@ -11,16 +11,9 @@
 
 xml *xml_error(status_code_t code, char *msg)
 {
-    xml *xml = xml_new();
-    xml_node *code_node;
-    xml_node *msg_node;
+    xml *xml = xml_new("error");
 
-    xml->root->tag = "error";
-    code_node = xml_new_node(xml->root);
-    code_node->tag = "code";
-    code_node->inner_text = get_status_message(code);
-    msg_node = xml_new_node(xml->root);
-    msg_node->tag = "message";
-    msg_node->inner_text = msg;
+    xml_new_node(xml->root, "code", get_status_message(code));
+    xml_new_node(xml->root, "message", msg);
     return xml;
 }

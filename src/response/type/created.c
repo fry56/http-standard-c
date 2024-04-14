@@ -8,7 +8,7 @@
 #include <response.h>
 #include <string.h>
 
-response_t *new_create(response_t *response, xml *body)
+response_t *new_created(response_t *response, xml *body)
 {
     response->status_code = 201;
     response->body = body;

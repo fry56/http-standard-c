@@ -7,8 +7,9 @@
 
 #include <netinet/in.h>
 #include <server.h>
+#include <stdio.h>
 
-server_t *create_server(int port, list *router)
+server_t *create_server(int port, list *router, map *cache)
 {
     server_t *server = calloc(1, sizeof(server_t));
     int opt = 1;
@@ -23,7 +24,7 @@ server_t *create_server(int port, list *router)
         sizeof(server->address)) == -1)
         return NULL;
     listen(server->socketFd, 10);
-    server->cache = map_new();
+    server->cache = cache ? cache : map_new();
     server->router = router;
     return server;
 }

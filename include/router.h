@@ -34,6 +34,6 @@ typedef struct {
 } route_config_t;
 
 route_s *add_route(list *router, route_config_t config);
-route_s *find_route(list *router, const char *path);
+route_s *find_route(list *router, const char *path, method_t method);
 response_t *handle_route(list *router, request_t *request);
 void extract_params(request_t *request);

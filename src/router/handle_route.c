@@ -26,14 +26,14 @@ static bool execute_route_logic(route_s *route, request_t *request,
 
 response_t *handle_route(list *router, request_t *request)
 {
-    route_s *route = find_route(router, request->path);
+    route_s *route = find_route(router, request->path, request->method);
     response_t *response = calloc(1, sizeof(response_t));
 
     if (response == NULL)
         return NULL;
     response->headers = map_new();
     response->body = NULL;
-    if (route == NULL || route->method != request->method)
+    if (route == NULL)
         return new_not_found(response, "Route not found");
     request->route = route;
     extract_params(request);
