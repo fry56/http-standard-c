@@ -11,8 +11,8 @@
 
 void free_response(response_t *response)
 {
-    map_foreach(response->headers, elem)
-        free(elem->key);
+    for (map_node_t *node = response->headers->head; node; node = node->next)
+        free(node->key);
     free(response->headers);
     if (response->body != NULL)
         xml_free(response->body);

@@ -18,8 +18,8 @@ static size_t get_response_length(response_t *response, size_t body_length)
     length += snprintf(NULL, 0, "HTTP/1.1 %d %s\r\n",
         response->status_code,
         get_status_message(response->status_code));
-    map_foreach(response->headers, elem)
-        length += strlen(elem->key) + strlen(elem->value) + 4;
+    for (map_node_t *node = response->headers->head; node; node = node->next)
+        length += strlen(node->key) + strlen(node->value) + 4;
     length += 2;
     if (response->body)
         length += body_length;
@@ -52,9 +52,8 @@ static char *format_http_response(response_t *response, char *str_body)
     offset = snprintf(http_response, estimated_length,
         "HTTP/1.1 %d %s\r\n",
         response->status_code, get_status_message(response->status_code));
-    map_foreach(response->headers, elem)
-        offset += sprintf(http_response + offset, "%s: %s\r\n",
-            elem->key, (char*)elem->value);
+    for (map_node_t *node = response->headers->head; node; node = node->next)
+        offset += sprintf(http_response + offset, "%s: %s\r\n", node->key, (char*)node->value);
     strcat(http_response + offset, "\r\n");
     if (str_body)
         strcat(http_response + offset, str_body);

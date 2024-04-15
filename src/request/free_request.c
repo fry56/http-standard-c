@@ -11,14 +11,14 @@
 
 void free_request(request_t *request)
 {
-    map_foreach(request->params, elem) {
-        free(elem->key);
-        free(elem->value);
+    for (map_node_t *node = request->params->head; node; node = node->next) {
+        free(node->key);
+        free(node->value);
     }
     free(request->params);
-    map_foreach(request->headers, elem) {
-        free(elem->value);
-        free(elem->key);
+    for (map_node_t *node = request->headers->head; node; node = node->next) {
+        free(node->value);
+        free(node->key);
     }
     free(request->headers);
     xml_free(request->body);
