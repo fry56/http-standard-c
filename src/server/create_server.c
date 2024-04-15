@@ -9,7 +9,7 @@
 #include <server.h>
 #include <stdio.h>
 
-server_t *create_server(int port, list *router, map *cache)
+server_t *create_server(int port, list_t *router, map_t *cache)
 {
     server_t *server = calloc(1, sizeof(server_t));
     int opt = 1;

@@ -18,7 +18,6 @@ void handle_request(int client_fd, server_t *server)
     response_t *response;
 
     if (request == NULL) {
-        printf("Error allocating memory\n");
         close(client_fd);
         return;
     }

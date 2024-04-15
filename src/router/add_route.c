@@ -36,7 +36,7 @@ static void parse_and_store_param_names(const char *template_path,
     }
 }
 
-static void end_of_string(route_s *route, char *dest,
+static void end_of_string(route_t *route, char *dest,
     const char *regex_pattern)
 {
     *dest = '$';
@@ -46,7 +46,7 @@ static void end_of_string(route_s *route, char *dest,
         fprintf(stderr, "Failed to compile regex: %s\n", regex_pattern);
 }
 
-static void compile_regex_for_route(route_s *route)
+static void compile_regex_for_route(route_t *route)
 {
     char regex_pattern[1024];
     const char *src = route->template_path;
@@ -78,9 +78,9 @@ const char *method_to_string(method_t method)
     return NULL;
 }
 
-route_s *add_route(list *router, route_config_t config)
+route_t *add_route(list_t *router, route_config_t config)
 {
-    route_s *new_entry = malloc(sizeof(route_s));
+    route_t *new_entry = malloc(sizeof(route_t));
 
     if (new_entry == NULL) {
         fprintf(stderr, "Memory allocation failed\n");

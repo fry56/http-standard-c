@@ -42,6 +42,7 @@ static void parse_headers(char *header_str, request_t *request)
 void parse_body(request_t *request, char *saveptr)
 {
     char *header_end = strstr(saveptr, "\r\n\r\n");
+
     request->body = xml_new(NULL);
     if (header_end) {
         *header_end = '\0';

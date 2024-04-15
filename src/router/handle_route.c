@@ -9,7 +9,7 @@
 #include <unistd.h>
 #include <stdlib.h>
 
-static bool execute_route_logic(route_s *route, request_t *request,
+static bool execute_route_logic(route_t *route, request_t *request,
     response_t *response)
 {
     if (route->middleware) {
@@ -24,9 +24,9 @@ static bool execute_route_logic(route_s *route, request_t *request,
     return false;
 }
 
-response_t *handle_route(list *router, request_t *request)
+response_t *handle_route(list_t *router, request_t *request)
 {
-    route_s *route = find_route(router, request->path, request->method);
+    route_t *route = find_route(router, request->path, request->method);
     response_t *response = calloc(1, sizeof(response_t));
 
     if (response == NULL)

@@ -16,13 +16,13 @@
 
 typedef struct {
     char *path;
-    struct route_s *route;
-    xml *body;
+    struct route_t *route;
+    xml_t *body;
     method_t method;
 
-    map *headers;
-    map *params;
-    map *cache;
+    map_t *headers;
+    map_t *params;
+    map_t *cache;
 } request_t;
 
 bool parse_request(int sockfd, request_t *request);

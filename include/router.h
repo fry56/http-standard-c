@@ -16,7 +16,7 @@
 #include <config.h>
 #include <list.h>
 
-typedef struct route_s {
+typedef struct route_t {
     char *template_path;
     regex_t regex_pattern;
     char param_names[PARAM_ARRAY_SIZE][PARAM_SIZE];
@@ -24,7 +24,7 @@ typedef struct route_s {
     method_t method;
     bool (*middleware)(request_t *, response_t *);
     void (*handler)(request_t *, response_t *);
-} route_s;
+} route_t;
 
 typedef struct {
     char *template_path;
@@ -33,7 +33,7 @@ typedef struct {
     void (*handler)(request_t *, response_t *);
 } route_config_t;
 
-route_s *add_route(list *router, route_config_t config);
-route_s *find_route(list *router, const char *path, method_t method);
-response_t *handle_route(list *router, request_t *request);
+route_t *add_route(list_t *router, route_config_t config);
+route_t *find_route(list_t *router, const char *path, method_t method);
+response_t *handle_route(list_t *router, request_t *request);
 void extract_params(request_t *request);

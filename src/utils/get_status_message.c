@@ -11,7 +11,7 @@
 char *get_status_message(status_code_t status_code)
 {
     for (const status_code_info_t *info = status_codes;
-         info->message != NULL; info++)
+        info->message != NULL; info++)
         if (info->code == status_code)
             return (char *)info->message;
     return "Unknown";
